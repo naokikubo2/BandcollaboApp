@@ -2,6 +2,9 @@ import 'package:bandcollabo_app/view/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+
+import 'Model/user/user_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,15 +13,21 @@ Future<void> main() async {
 }
 
 class BandcollaboApp extends StatelessWidget {
+  final UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserModel>(create: (_)=> UserModel()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+        ),
+        //home: MyHomePage(title: 'Flutter Demo Home Page'),
+        home: LoginPage(),
       ),
-      //home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: LoginPage(),
     );
   }
 }
