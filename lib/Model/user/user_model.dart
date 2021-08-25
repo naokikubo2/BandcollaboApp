@@ -33,4 +33,10 @@ class UserModel extends ChangeNotifier{
     // ユーザー情報を更新
     user = result.user!;
   }
+
+  bool checkUser(){
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    return user != null;
+  }
 }

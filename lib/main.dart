@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import 'Model/user/user_model.dart';
+import 'View/home/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,39 +27,22 @@ class BandcollaboApp extends StatelessWidget {
           primarySwatch: Colors.red,
         ),
         //home: MyHomePage(title: 'Flutter Demo Home Page'),
-        home: LoginPage(),
+        home: _LoginCheck(),
+        routes: <String,WidgetBuilder>{
+          '/home':(BuildContext context) => HomePage(),
+          '/login':(BuildContext context) => LoginPage(),
+        },
       ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
+class _LoginCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ElevatedButton(
-        onPressed: () async {
-          await FirebaseFirestore.instance
-              .collection('post') // コレクションID指定
-              .doc() // ドキュメントID自動生成
-              .set({
-            'text': "Hellow World",
-          });
-        },
-        child: Text("click me"),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    // ログイン状態に応じて、画面を切り替える
+    final bool _loggedIn = Provider.of<UserModel>(context).checkUser();
+    return _loggedIn
+        ? HomePage() : LoginPage();
   }
 }
