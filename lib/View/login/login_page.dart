@@ -83,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     try {
                       // メール/パスワードでログイン
+                      await userModel.logInEmail(email, password);
                       // ログインに成功した場合
                       // チャット画面に遷移＋ログイン画面を破棄
                       await Navigator.of(context).pushReplacement(

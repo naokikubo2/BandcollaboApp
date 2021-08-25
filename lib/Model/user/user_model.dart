@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 class UserModel extends ChangeNotifier{
   User? user;
 
+  //新規登録
   Future signInEmail(String email, String password)async{
     final FirebaseAuth auth = FirebaseAuth.instance;
     final result = await auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -21,10 +22,15 @@ class UserModel extends ChangeNotifier{
       "email": newUser.email,
     });
   }
+
+  //ログイン
+  Future logInEmail(String email, String password)async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final result = await auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    // ユーザー情報を更新
+    user = result.user!;
+  }
 }
-
-
-//新規登録
-
-
-//ログイン
