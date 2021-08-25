@@ -22,85 +22,100 @@ class _LoginPageState extends State<LoginPage> {
     final UserModel userModel = Provider.of<UserModel>(context);
     return Scaffold(
       body: Center(
-        child: Container(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // メールアドレス入力
-              TextFormField(
-                decoration: InputDecoration(labelText: 'メールアドレス'),
-                onChanged: (String value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-              ),
-              // パスワード入力
-              TextFormField(
-                decoration: InputDecoration(labelText: 'パスワード'),
-                obscureText: true,
-                onChanged: (String value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
-              ),
-              Container(
-                padding: EdgeInsets.all(8),
-                // メッセージ表示
-                child: Text(infoText),
-              ),
-              Container(
-                width: double.infinity,
-                // ユーザー登録ボタン
-                child: ElevatedButton(
-                  child: Text('ユーザー登録'),
-                  onPressed: () async {
-                    try {
-                      // メール/パスワードでユーザー登録
-                      await userModel.signInEmail(email, password);
-                      await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) {
-                          return HomePage();
-                        }),
-                      );
-                    } catch (e) {
-                      // ユーザー登録に失敗した場合
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // メールアドレス入力
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'メールアドレス'),
+                    onChanged: (String value) {
                       setState(() {
-                        infoText = "登録に失敗しました：${e.toString()}";
+                        email = value;
                       });
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                // ログイン登録ボタン
-                child: OutlinedButton(
-                  child: Text('ログイン'),
-                  onPressed: () async {
-                    try {
-                      // メール/パスワードでログイン
-                      await userModel.logInEmail(email, password);
-                      // ログインに成功した場合
-                      // チャット画面に遷移＋ログイン画面を破棄
-                      await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => HomePage()
-                        ),
-                      );
-                    } catch (e) {
-                      // ログインに失敗した場合
+                    },
+                  ),
+                  // パスワード入力
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'パスワード'),
+                    obscureText: true,
+                    onChanged: (String value) {
                       setState(() {
-                        infoText = "ログインに失敗しました：${e.toString()}";
+                        password = value;
                       });
-                    }
-                  },
-                ),
+                    },
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    // メッセージ表示
+                    child: Text(infoText),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    // ユーザー登録ボタン
+                    child: ElevatedButton(
+                      child: Text('ユーザー登録'),
+                      onPressed: () async {
+                        try {
+                          // メール/パスワードでユーザー登録
+                          await userModel.signInEmail(email, password);
+                          userModel.endLoading();
+                          await Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                              return HomePage();
+                            }),
+                          );
+                        } catch (e) {
+                          userModel.endLoading();
+                          // ユーザー登録に失敗した場合
+                          setState(() {
+                            infoText = "登録に失敗しました：${e.toString()}";
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    // ログイン登録ボタン
+                    child: OutlinedButton(
+                      child: Text('ログイン'),
+                      onPressed: () async {
+                        try {
+                          // メール/パスワードでログイン
+                          await userModel.logInEmail(email, password);
+                          userModel.endLoading();
+                          // ログインに成功した場合
+                          // チャット画面に遷移＋ログイン画面を破棄
+                          await Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => HomePage()
+                            ),
+                          );
+                        } catch (e) {
+                          // ログインに失敗した場合
+                          userModel.endLoading();
+                          setState(() {
+                            infoText = "ログインに失敗しました：${e.toString()}";
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            userModel.isLoading ? Container(
+              color: Colors.grey.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+                : Container(),
+          ],
         ),
       ),
     );

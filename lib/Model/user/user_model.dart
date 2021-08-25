@@ -4,9 +4,21 @@ import 'package:flutter/cupertino.dart';
 
 class UserModel extends ChangeNotifier{
   User? user;
+  bool isLoading = false;
+
+  startLoading(){
+    isLoading = true;
+    notifyListeners();
+  }
+
+  endLoading(){
+    isLoading = false;
+    notifyListeners();
+  }
 
   //新規登録
   Future signInEmail(String email, String password)async{
+    startLoading();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final result = await auth.createUserWithEmailAndPassword(email: email, password: password);
     await createUserEmail(result.user!);
@@ -25,6 +37,7 @@ class UserModel extends ChangeNotifier{
 
   //ログイン
   Future logInEmail(String email, String password)async{
+    startLoading();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final result = await auth.signInWithEmailAndPassword(
       email: email,
@@ -39,4 +52,5 @@ class UserModel extends ChangeNotifier{
     user = auth.currentUser;
     return user != null;
   }
+
 }
