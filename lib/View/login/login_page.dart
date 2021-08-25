@@ -1,7 +1,11 @@
+import 'package:bandcollabo_app/View/home/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+  String email = '';
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +27,8 @@ class LoginPage extends StatelessWidget {
                 width: double.infinity,
                 // メッセージ表示
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   child: Text(
                     "新規登録"
                   ),
