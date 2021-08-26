@@ -1,5 +1,6 @@
 import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:bandcollabo_app/Model/user/user_model.dart';
+import 'package:bandcollabo_app/View/common/main.dart';
 import 'package:bandcollabo_app/View/home/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                           // ログインに成功した場合
                           // チャット画面に遷移＋ログイン画面を破棄
                           await Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => HomePage()
+                            MaterialPageRoute(builder: (context) => BandcollaboApp()
                             ),
                           );
                         } catch (e) {
