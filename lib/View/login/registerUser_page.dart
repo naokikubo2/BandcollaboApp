@@ -3,27 +3,30 @@ import 'package:bandcollabo_app/Model/user/user_model.dart';
 import 'package:bandcollabo_app/View/common/main.dart';
 import 'package:bandcollabo_app/View/home/home_page.dart';
 import 'package:bandcollabo_app/View/login/registerPart_page.dart';
-import 'package:bandcollabo_app/View/login/registerUser_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterUserPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterUserPageState createState() => _RegisterUserPageState();
 }
-class _LoginPageState extends State<LoginPage> {
+class _RegisterUserPageState extends State<RegisterUserPage> {
   // メッセージ表示用
   String infoText = '';
   // 入力したメールアドレス・パスワード
   String email = '';
   String password = '';
+  String name = '';
 
   @override
   Widget build(BuildContext context) {
     // ユーザー情報を受け取る
     final UserModel userModel = Provider.of<UserModel>(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text("ユーザー登録"),
+      ),
       body: Center(
         child: Stack(
           children: [
@@ -32,6 +35,16 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'ニックネーム(他のSNSと同じ名前がおすすめ)'),
+                    maxLength: 15,
+                    onChanged: (String value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 30,),
                   // メールアドレス入力
                   TextFormField(
                     decoration: InputDecoration(labelText: 'メールアドレス'),
@@ -58,44 +71,28 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Container(
                     width: double.infinity,
-                    // ログイン登録ボタン
-                    child: OutlinedButton(
-                      child: Text('ログイン'),
+                    // ユーザー登録ボタン
+                    child: ElevatedButton(
+                      child: Text('ユーザー登録'),
                       onPressed: () async {
                         try {
-                          // メール/パスワードでログイン
-                          await userModel.logInEmail(email, password);
+                          // メール/パスワードでユーザー登録
+                          await userModel.signInEmail(name, email, password);
                           userModel.endLoading();
-                          // ログインに成功した場合
-                          // チャット画面に遷移＋ログイン画面を破棄
                           await Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => BandcollaboApp()
-                            ),
+                            MaterialPageRoute(builder: (context) {
+                              return RegisterPartPage();
+                            }),
                           );
                         } catch (e) {
-                          // ログインに失敗した場合
                           userModel.endLoading();
+                          // ユーザー登録に失敗した場合
                           setState(() {
-                            infoText = "ログインに失敗しました：${e.toString()}";
+                            infoText = "登録に失敗しました：${e.toString()}";
                           });
                         }
                       },
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    //width: double.infinity,
-                    // ユーザー登録ボタン
-                   child: TextButton.icon(
-                     onPressed: () {
-                       Navigator.of(context).push(
-                         MaterialPageRoute(builder: (context) => RegisterUserPage()
-                         ),
-                       );
-                     },
-                     icon: Icon(Icons.add, size: 18),
-                     label: Text("ユーザー登録する"),
-                   ),
                   ),
                 ],
               ),

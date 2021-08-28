@@ -17,14 +17,14 @@ class UserModel extends ChangeNotifier{
   }
 
   //新規登録
-  Future signInEmail(String email, String password)async{
+  Future signInEmail(String name, String email, String password)async{
     startLoading();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final result = await auth.createUserWithEmailAndPassword(email: email, password: password);
-    await createUserEmail(result.user!);
+    await createUserEmail(result.user!, name);
   }
 
-  Future createUserEmail(User newUser)async{
+  Future createUserEmail(User newUser, String name)async{
     user = newUser;
     await FirebaseFirestore.instance
         .collection("users")
@@ -32,6 +32,22 @@ class UserModel extends ChangeNotifier{
         .set({
       "uid": newUser.uid,
       "email": newUser.email,
+      "name": name,
+    });
+  }
+
+  //楽器パート登録
+  Future registerPart(bool isCheckedMix, bool isCheckedMovie, String part)async{
+    startLoading();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .update({
+      "part": part,
+      "mix": isCheckedMix,
+      "movie": isCheckedMovie,
     });
   }
 
