@@ -145,21 +145,27 @@ class _RegisterPartPageState extends State<RegisterPartPage> {
                               infoText = "ログインに失敗しました：${e.toString()}";
                             });
                           }
-
-
                         },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        child: Text('スキップする'),
+                          onPressed: ()  {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => RegisterIconPage()
+                              ),
+                            );
+                          }
                       ),
                     ),
                   ],
                 ),
               ),
-              false ? Container(
-                color: Colors.grey.withOpacity(0.5),
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-                  : Container(),
             ],
           ),
         ),

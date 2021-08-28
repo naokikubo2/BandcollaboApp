@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class UserModel extends ChangeNotifier{
   User? user;
   bool isLoading = false;
+  File? imageFile;
 
   startLoading(){
     isLoading = true;
@@ -69,4 +75,36 @@ class UserModel extends ChangeNotifier{
     return user != null;
   }
 
+  Future showImagePicker() async {
+    final picker = ImagePicker();
+    final pickerFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 80);
+    imageFile = File(pickerFile!.path);
+    notifyListeners();
+  }
+
+  String imageUrl='';
+  Future setUserImage(File imageFIle) async {
+    startLoading();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    imageUrl = await _uploadImage(imageFile!, user!);
+    await FirebaseFirestore.instance
+        .collection('users') // コレクションID指定
+        .doc(user!.uid) // ドキュメントID自動生成
+        .update({
+      'imagePath': imageUrl,
+    });
+    notifyListeners();
+  }
+
+  Future<String> _uploadImage(File file, User user) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    final String uid = user.uid;
+    final String fileName = basename(file.path);
+    Reference ref = storage.ref().child("images/user/$uid/$fileName");
+    UploadTask uploadTask = ref.putFile(file);
+    final TaskSnapshot downloadUrl= (await uploadTask);
+    final String url= await downloadUrl.ref.getDownloadURL();
+    return url;
+  }
 }

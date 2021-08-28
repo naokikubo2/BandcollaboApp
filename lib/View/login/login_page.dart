@@ -2,6 +2,7 @@ import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:bandcollabo_app/Model/user/user_model.dart';
 import 'package:bandcollabo_app/View/common/main.dart';
 import 'package:bandcollabo_app/View/home/home_page.dart';
+import 'package:bandcollabo_app/View/login/registerIcon_page.dart';
 import 'package:bandcollabo_app/View/login/registerPart_page.dart';
 import 'package:bandcollabo_app/View/login/registerUser_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     width: double.infinity,
                     // ログイン登録ボタン
-                    child: OutlinedButton(
+                    child: ElevatedButton(
                       child: Text('ログイン'),
                       onPressed: () async {
                         try {

@@ -79,10 +79,11 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                           // メール/パスワードでユーザー登録
                           await userModel.signInEmail(name, email, password);
                           userModel.endLoading();
-                          await Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                              return RegisterPartPage();
-                            }),
+                          await Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPartPage(),
+                            ),
+                                (route) => false,
                           );
                         } catch (e) {
                           userModel.endLoading();
