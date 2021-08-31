@@ -1,10 +1,7 @@
 import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:bandcollabo_app/Model/user/user_model.dart';
 import 'package:bandcollabo_app/View/common/main.dart';
-import 'package:bandcollabo_app/View/home/home_page.dart';
-import 'package:bandcollabo_app/View/login/registerIcon_page.dart';
-import 'package:bandcollabo_app/View/login/registerPart_page.dart';
-import 'package:bandcollabo_app/View/login/registerUser_page.dart';
+import 'package:bandcollabo_app/View/user/signin/registerName_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // ユーザー情報を受け取る
     final UserModel userModel = Provider.of<UserModel>(context);
+    final UserState userState = Provider.of<UserState>(context);
     return Scaffold(
       body: Center(
         child: Stack(
@@ -89,8 +87,9 @@ class _LoginPageState extends State<LoginPage> {
                     // ユーザー登録ボタン
                    child: TextButton.icon(
                      onPressed: () {
+                       userState.email = "test";
                        Navigator.of(context).push(
-                         MaterialPageRoute(builder: (context) => RegisterUserPage()
+                         MaterialPageRoute(builder: (context) => RegisterNamePage(),
                          ),
                        );
                      },

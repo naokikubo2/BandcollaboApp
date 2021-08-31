@@ -1,5 +1,7 @@
+import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:bandcollabo_app/Model/user/user_model.dart';
-import 'package:bandcollabo_app/View/login/registerIcon_page.dart';
+import 'package:bandcollabo_app/View/user/signin/registerIcon_page.dart';
+import 'package:bandcollabo_app/View/user/signin/selectSignIn_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +20,7 @@ class _RegisterPartPageState extends State<RegisterPartPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserModel userModel = Provider.of<UserModel>(context);
+    final UserState userState = Provider.of<UserState>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("担当パート登録"),
@@ -126,41 +128,27 @@ class _RegisterPartPageState extends State<RegisterPartPage> {
                       width: double.infinity,
                       // ユーザー登録ボタン
                       child: ElevatedButton(
-                        child: Text('保存する'),
+                        child: Text('次へ'),
                         onPressed: () async {
                           try {
                             // メール/パスワードでログイン
-                            await userModel.registerPart(isCheckedMix, isCheckedMovie, part);
-                            userModel.endLoading();
+                            //await userModel.registerPart(isCheckedMix, isCheckedMovie, part);
+                            //userModel.endLoading();
+                            userState.setPart(part, isCheckedMix, isCheckedMovie);
                             // ログインに成功した場合
                             // チャット画面に遷移＋ログイン画面を破棄
-                            await Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => RegisterIconPage()
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => SelectSignInPage()
                               ),
                             );
                           } catch (e) {
                             // ログインに失敗した場合
-                            userModel.endLoading();
+                            //userModel.endLoading();
                             setState(() {
                               infoText = "ログインに失敗しました：${e.toString()}";
                             });
                           }
                         },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        child: Text('スキップする'),
-                          onPressed: ()  {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => RegisterIconPage()
-                              ),
-                            );
-                          }
                       ),
                     ),
                   ],

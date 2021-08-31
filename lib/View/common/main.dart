@@ -1,5 +1,6 @@
+import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:bandcollabo_app/View/common/root.dart';
-import 'package:bandcollabo_app/view/login/login_page.dart';
+import 'package:bandcollabo_app/View/user/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +16,12 @@ Future<void> main() async {
 }
 
 class BandcollaboApp extends StatelessWidget {
-  final UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserModel>(create: (_)=> UserModel()),
+        ChangeNotifierProvider<UserState>(create: (_)=> UserState()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

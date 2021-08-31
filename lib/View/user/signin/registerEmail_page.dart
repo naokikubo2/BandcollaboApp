@@ -1,28 +1,27 @@
 import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:bandcollabo_app/Model/user/user_model.dart';
-import 'package:bandcollabo_app/View/common/main.dart';
-import 'package:bandcollabo_app/View/home/home_page.dart';
-import 'package:bandcollabo_app/View/login/registerPart_page.dart';
+import 'package:bandcollabo_app/View/user/signin/registerIcon_page.dart';
+import 'package:bandcollabo_app/View/user/signin/registerPart_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RegisterUserPage extends StatefulWidget {
+class RegisterEmailPage extends StatefulWidget {
   @override
-  _RegisterUserPageState createState() => _RegisterUserPageState();
+  _RegisterEmailPageState createState() => _RegisterEmailPageState();
 }
-class _RegisterUserPageState extends State<RegisterUserPage> {
+class _RegisterEmailPageState extends State<RegisterEmailPage> {
   // メッセージ表示用
   String infoText = '';
   // 入力したメールアドレス・パスワード
   String email = '';
   String password = '';
-  String name = '';
 
   @override
   Widget build(BuildContext context) {
     // ユーザー情報を受け取る
     final UserModel userModel = Provider.of<UserModel>(context);
+    final UserState userState= Provider.of<UserState>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("ユーザー登録"),
@@ -35,15 +34,6 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'ニックネーム(他のSNSと同じ名前がおすすめ)'),
-                    maxLength: 15,
-                    onChanged: (String value) {
-                      setState(() {
-                        name = value;
-                      });
-                    },
-                  ),
                   SizedBox(height: 30,),
                   // メールアドレス入力
                   TextFormField(
@@ -77,11 +67,11 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                       onPressed: () async {
                         try {
                           // メール/パスワードでユーザー登録
-                          await userModel.signInEmail(name, email, password);
+                          await userModel.signInEmail(email, password, userState);
                           userModel.endLoading();
                           await Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) => RegisterPartPage(),
+                                builder: (context) => RegisterIconPage(),
                             ),
                                 (route) => false,
                           );
@@ -95,6 +85,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                       },
                     ),
                   ),
+
                 ],
               ),
             ),

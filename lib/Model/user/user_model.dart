@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bandcollabo_app/Model/user/userState.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -23,14 +24,14 @@ class UserModel extends ChangeNotifier{
   }
 
   //新規登録
-  Future signInEmail(String name, String email, String password)async{
+  Future signInEmail(String email, String password, UserState userState)async{
     startLoading();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final result = await auth.createUserWithEmailAndPassword(email: email, password: password);
-    await createUserEmail(result.user!, name);
+    await createUserEmail(result.user!, userState);
   }
 
-  Future createUserEmail(User newUser, String name)async{
+  Future createUserEmail(User newUser, UserState userState)async{
     user = newUser;
     await FirebaseFirestore.instance
         .collection("users")
@@ -38,7 +39,10 @@ class UserModel extends ChangeNotifier{
         .set({
       "uid": newUser.uid,
       "email": newUser.email,
-      "name": name,
+      "name": userState.name,
+      "part": userState.part,
+      "mix": userState.mix,
+      "movie": userState.movie,
     });
   }
 

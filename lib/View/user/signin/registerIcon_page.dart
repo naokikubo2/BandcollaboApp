@@ -10,6 +10,7 @@ class RegisterIconPage extends StatefulWidget {
 }
 class _RegisterIconPageState extends State<RegisterIconPage> {
   String infoText = '';
+  String name = '';
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +27,6 @@ class _RegisterIconPageState extends State<RegisterIconPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        child: Text('他のSNSで使用しているアイコン画像が望ましいです'),
-                      ),
-                      SizedBox(height: 10,),
                       Container(
                         width: double.infinity,
                         child: Column(
@@ -75,6 +72,10 @@ class _RegisterIconPageState extends State<RegisterIconPage> {
                       ),
                       SizedBox(height: 10,),
                       Container(
+                        child: Text('他のSNSで使用しているアイコン画像が望ましいです'),
+                      ),
+                      SizedBox(height: 10,),
+                      Container(
                         child: Text(
                           '※後から変更可能です',
                           style: TextStyle(
@@ -90,7 +91,7 @@ class _RegisterIconPageState extends State<RegisterIconPage> {
                       Container(
                         width: double.infinity,
                         child: ElevatedButton(
-                          child: Text('保存する'),
+                          child: Text('次へ'),
                           onPressed: () async {
                             //try {
                               await userModel.setUserImage(userModel.imageFile!);
