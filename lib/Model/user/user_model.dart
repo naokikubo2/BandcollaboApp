@@ -9,9 +9,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 class UserModel extends ChangeNotifier{
+  UserState? userState;
   User? user;
   bool isLoading = false;
   File? imageFile;
+
+  final _userCollection = FirebaseFirestore.instance.collection('users');
 
   startLoading(){
     isLoading = true;
@@ -33,8 +36,7 @@ class UserModel extends ChangeNotifier{
 
   Future createUserEmail(User newUser, UserState userState)async{
     user = newUser;
-    await FirebaseFirestore.instance
-        .collection("users")
+    await _userCollection
         .doc(user!.uid)
         .set({
       "uid": newUser.uid,
@@ -51,8 +53,7 @@ class UserModel extends ChangeNotifier{
     startLoading();
     final FirebaseAuth auth = FirebaseAuth.instance;
     user = auth.currentUser;
-    await FirebaseFirestore.instance
-        .collection("users")
+    await _userCollection
         .doc(user!.uid)
         .update({
       "part": part,
@@ -110,5 +111,24 @@ class UserModel extends ChangeNotifier{
     final TaskSnapshot downloadUrl= (await uploadTask);
     final String url= await downloadUrl.ref.getDownloadURL();
     return url;
+  }
+
+  Future fetchUser()async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    final DocumentSnapshot snapshot = await _userCollection
+        .doc(user!.uid) // ドキュメントID自動生成
+        .get();
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    final String uid = data['uid'];
+    final String name = data['name'];
+    final String email = data['email'];
+    final bool mix = data['mix'];
+    final bool movie = data['movie'];
+    final String part = data['part'];
+    final String imageUrl = data['imagePath'];
+    print("aa");
+    this.userState = UserState(uid, name, email, mix, movie, part, imageUrl);
+    notifyListeners();
   }
 }

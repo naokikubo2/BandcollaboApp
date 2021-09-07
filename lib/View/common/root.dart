@@ -1,4 +1,5 @@
 import 'package:bandcollabo_app/View/home/home_page.dart';
+import 'package:bandcollabo_app/View/mypage/my_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class _RootWidgetState extends State<RootWidget> {
     SamplePage(),
     HomePage(),
     SamplePage(),
-    SamplePage(),
+    MyPage(),
   ];
   // ==============
 

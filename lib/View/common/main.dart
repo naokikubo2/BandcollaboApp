@@ -21,7 +21,7 @@ class BandcollaboApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserModel>(create: (_)=> UserModel()),
-        ChangeNotifierProvider<UserState>(create: (_)=> UserState()),
+        ChangeNotifierProvider<UserState>(create: (_)=> UserState("","","", false, false, "","")),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
