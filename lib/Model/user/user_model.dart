@@ -82,8 +82,18 @@ class UserModel extends ChangeNotifier{
 
   Future showImagePicker() async {
     final picker = ImagePicker();
-    final pickerFile = await picker.getImage(source: ImageSource.gallery, imageQuality: 80);
+    final pickerFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     imageFile = File(pickerFile!.path);
+    notifyListeners();
+  }
+
+  bool seeShowDialog = false;
+  Future editImagePicker() async {
+    final picker = ImagePicker();
+    final pickerFile = await picker.pickImage(
+        source: ImageSource.gallery, imageQuality: 80);
+    imageFile = File(pickerFile!.path);
+    seeShowDialog = true;
     notifyListeners();
   }
 
@@ -92,17 +102,40 @@ class UserModel extends ChangeNotifier{
     startLoading();
     final FirebaseAuth auth = FirebaseAuth.instance;
     user = auth.currentUser;
-    imageUrl = await _uploadImage(imageFile!, user!);
+    List<String> fileInfo;
+    fileInfo = await _uploadImage(imageFile!, user!);
+    imageUrl = fileInfo[0];
+    String fileName = fileInfo[1];
     await FirebaseFirestore.instance
         .collection('users') // コレクションID指定
         .doc(user!.uid) // ドキュメントID自動生成
         .update({
       'imagePath': imageUrl,
+      'fileName': fileName,
     });
     notifyListeners();
   }
 
-  Future<String> _uploadImage(File file, User user) async {
+  Future editUserImage(File imageFIle) async {
+    startLoading();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    await _deleteImage(user!);
+    List<String> fileInfo;
+    fileInfo = await _uploadImage(imageFile!, user!);
+    imageUrl = fileInfo[0];
+    String fileName = fileInfo[1];
+    await FirebaseFirestore.instance
+        .collection('users') // コレクションID指定
+        .doc(user!.uid) // ドキュメントID自動生成
+        .update({
+      'imagePath': imageUrl,
+      'fileName': fileName,
+    });
+    notifyListeners();
+  }
+
+  Future<List<String>> _uploadImage(File file, User user) async {
     FirebaseStorage storage = FirebaseStorage.instance;
     final String uid = user.uid;
     final String fileName = basename(file.path);
@@ -110,7 +143,18 @@ class UserModel extends ChangeNotifier{
     UploadTask uploadTask = ref.putFile(file);
     final TaskSnapshot downloadUrl= (await uploadTask);
     final String url= await downloadUrl.ref.getDownloadURL();
-    return url;
+    return [url, fileName];
+  }
+
+  Future<void> _deleteImage(User user) async {
+    final DocumentSnapshot snapshot = await _userCollection
+        .doc(user!.uid) // ドキュメントID自動生成
+        .get();
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    final String fileName = data['fileName'];
+    FirebaseStorage storage = FirebaseStorage.instance;
+    final String uid = user.uid;
+    storage.ref().child("images/user/$uid/$fileName").delete();
   }
 
   Future fetchUser()async{

@@ -24,7 +24,7 @@ class _RootWidgetState extends State<RootWidget> {
     Icons.textsms,
     Icons.add_circle_outline_sharp,
     Icons.movie_creation_outlined,
-    Icons.work,
+    Icons.account_circle,
   ];
 
   static const _footerItemNames = [
