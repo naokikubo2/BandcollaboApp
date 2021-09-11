@@ -62,6 +62,21 @@ class UserModel extends ChangeNotifier{
     });
   }
 
+  Future editUserInfo(String name, bool isCheckedMix, bool isCheckedMovie, String part)async{
+    startLoading();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    user = auth.currentUser;
+    await _userCollection
+        .doc(user!.uid)
+        .update({
+      "name": name,
+      "part": part,
+      "mix": isCheckedMix,
+      "movie": isCheckedMovie,
+    });
+  }
+
+
   //ログイン
   Future logInEmail(String email, String password)async{
     startLoading();
@@ -87,13 +102,11 @@ class UserModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  bool seeShowDialog = false;
   Future editImagePicker() async {
     final picker = ImagePicker();
     final pickerFile = await picker.pickImage(
         source: ImageSource.gallery, imageQuality: 80);
     imageFile = File(pickerFile!.path);
-    seeShowDialog = true;
     notifyListeners();
   }
 
@@ -148,7 +161,7 @@ class UserModel extends ChangeNotifier{
 
   Future<void> _deleteImage(User user) async {
     final DocumentSnapshot snapshot = await _userCollection
-        .doc(user!.uid) // ドキュメントID自動生成
+        .doc(user.uid) // ドキュメントID自動生成
         .get();
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     final String fileName = data['fileName'];
