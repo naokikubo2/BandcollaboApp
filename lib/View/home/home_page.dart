@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Card(
                     child: Container(
-                      margin: EdgeInsets.all(10.0), 
+                      margin: EdgeInsets.all(10.0),
                       padding: const EdgeInsets.all(5.0),
                       child: Column(
                         children: [
@@ -52,11 +52,11 @@ class HomePage extends StatelessWidget {
                                 children: [
                                   Container(
                                     padding: EdgeInsets.all(2),
-                                    width: 50,
-                                    height: 50,
+                                    width: 100,
+                                    height: 100,
                                     child: CircleAvatar(
                                       radius: 35,
-                                      backgroundImage: AssetImage('images/guitar.png'),
+                                      backgroundImage: AssetImage('images/KALMA.jpeg'),
                                       backgroundColor: Colors.white,
                                     ),
                                     decoration: new BoxDecoration(
